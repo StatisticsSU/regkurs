@@ -15,6 +15,8 @@ logisticregsummary(
 \arguments{
 \item{glmobject}{a fitted regression model from \code{glm}.}
 
+\item{odds_ratio}{\code{TRUE} if odds ratios for parameters is computed.}
+
 \item{param}{\code{TRUE} if parameter estimates, standard errors etc is computed.}
 
 \item{conf_intervals}{\code{TRUE} if confidence intervals for parameters.}
