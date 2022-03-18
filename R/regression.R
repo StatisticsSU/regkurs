@@ -69,7 +69,7 @@ regsummary <- function(lmobject, anova = T,  fit_measures = T, param = T,
       X = data[,-1]
       vif = rep(NA,df_regr)
       for (j in 1:df_regr){
-        vif[j] = 1/summary(lm(X[,j] ~ data.matrix(X[,-j])))$r.squared
+        vif[j] = 1/(1-summary(lm(X[,j] ~ data.matrix(X[,-j])))$r.squared)
       }
       if (intercept) vif = c(NA,vif)
       param_table = cbind(param_table,vif)
@@ -126,7 +126,7 @@ logisticregsummary <- function(glmobject, odds_ratio = T, param = T, conf_interv
     if (vif_factors & k>1){
       vif = rep(NA,k)
       for (j in 1:k){
-        vif[j] = 1/summary(lm(X[,j] ~ data.matrix(X[,-j])))$r.squared
+        vif[j] = 1/(1-summary(lm(X[,j] ~ data.matrix(X[,-j])))$r.squared)
       }
       if (intercept) vif = c(NA,vif)
       param_table = cbind(param_table,vif)
@@ -154,7 +154,7 @@ logisticregsummary <- function(glmobject, odds_ratio = T, param = T, conf_interv
     if (vif_factors & k>1){
       vif = rep(NA,k)
       for (j in 1:k){
-        vif[j] = 1/summary(lm(X[,j] ~ data.matrix(X[,-j])))$r.squared
+        vif[j] = 1/(1-summary(lm(X[,j] ~ data.matrix(X[,-j])))$r.squared)
       }
       if (intercept) vif = c(NA,vif)
       odds_ratio_table = cbind(odds_ratio_table,vif)
