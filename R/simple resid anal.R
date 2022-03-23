@@ -1,5 +1,5 @@
 
- @export
+ '@export
 
 
 res.diagnostics<-function(lm_obj){
