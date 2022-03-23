@@ -1,4 +1,7 @@
 
+ @export
+
+
 res.diagnostics<-function(lm_obj){
 
   fitted<-fitted(lm_obj)
