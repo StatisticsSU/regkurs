@@ -1,7 +1,7 @@
 #' Plots residual diagnostics for regression model.
 #'
 #' @param lm_obj a fitted regression model from `lm`.
-#' @return list with six plot handles
+#' @return list with at least six plots
 #' @export
 #' @examples
 #' library(regkurs)
