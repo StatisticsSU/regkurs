@@ -14,9 +14,6 @@ res.diagnostics<-function(lm_obj){
   x<-lm_obj$model[,-1]
   nx<- dim(lm_obj$model)[2]#number of covariates
 
-  
-  
-    
     
   # Fitted values vs residuals
   p1<-plot(fitted, residuals,
