@@ -1,7 +1,12 @@
-
-# '@export
-
-
+#' Plots residual diagnostics for regression model.
+#'
+#' @param lm_obj a fitted regression model from `lm`.
+#' @return list with six plot handles
+#' @export
+#' @examples
+#' library(regkurs)
+#' lmfit = lm(nRides ~ temp + hum + windspeed, data = bike)
+#' res.diagnostics(lmfit)
 res.diagnostics<-function(lm_obj){
 
   fitted<-fitted(lm_obj)
@@ -70,7 +75,7 @@ xx<-x[,i]
 
  
 
-  plot_final<-(list(p1, p2,p3,p4,p5,p6))
+  plot_final<-(list(p1,p2,p3,p4,p5,p6))
 
 }
 
