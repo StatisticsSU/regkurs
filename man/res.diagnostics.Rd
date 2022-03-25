@@ -14,7 +14,7 @@ res.diagnostics(lm_obj)
 \value{
 list with six plot handles
 
-list with six plot handles
+list with at least six plots
 }
 \description{
 Plots residual diagnostics for regression model.
