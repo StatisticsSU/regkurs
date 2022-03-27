@@ -26,6 +26,8 @@
 
 
 res.diagnostics<-function(lm_obj,block=F,outliers=F,normality=F,outnorm=F,regressors=F){
+  while (dev.cur()>1) dev.off()
+  if(!is.null(dev.list())) dev.off()
   
   fitted<-fitted(lm_obj)
   residuals<-resid(lm_obj)
