@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 #' Illustrate the results from residual analysis
 #'
 #' At least seven plots can be produced in one panel.
