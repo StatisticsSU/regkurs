@@ -18,16 +18,16 @@ res.diagnostics(
 
 \item{outliers}{\code{TRUE} only plots regarding the residuals will be produced in two scatter plots and a boxplot.
 The first scatter scatter plot is between the actual residuals from \code{lm} function and the fitted values.
-The second scatterplot it the studentized reiduals vs the fitted values. The boxplot is from the studentized residuals.}
+The second scatter plot it the studentized reiduals vs the fitted values. The boxplot is from the studentized residuals.}
 
 \item{normality}{\code{TRUE} it will give an histogram of the residuals, a qq-plot of the residuals and
 a scatterplot between the fitted values and the the actual values of the dependent variable is also included.}
 
 \item{outnorm}{\code{TRUE} will give a panel with 6 diagrams for the residuals in \code{outliers} and in \code{normality} together.}
 
-\item{regressors}{\code{TRUE} if TRUE the scatterplot regarding each and every independent variable and the residuals will be produced.}
+\item{regressors}{\code{TRUE} one or more than one scatter plot regarding each independent variable and the residuals will be produced.}
 
-\item{lmobject}{a fitted regression model from \code{lm}. With only this argument the function will give all the plots one by one.}
+\item{lmobject}{a fitted regression model from \code{lm}. With only this argument the function will print out all the plots one by one.}
 }
 \description{
 At least seven plots can be produced in one panel.
