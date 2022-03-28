@@ -9,23 +9,24 @@ res.diagnostics(
   block = F,
   outliers = F,
   normality = F,
-  outnorm = F,
+  outnorm = T,
   regressors = F
 )
 }
 \arguments{
-\item{block}{\code{TRUE} all the plots will be in one panel.}
+\item{block}{\code{TRUE} all the plots about the residuals will be in one panel.}
 
 \item{outliers}{\code{TRUE} only plots regarding the residuals will be produced in two scatter plots and a boxplot.
 The first scatter scatter plot is between the actual residuals from \code{lm} function and the fitted values.
-The second scatter plot it the studentized reiduals vs the fitted values. The boxplot is from the studentized residuals.}
+The second scatter plot it the studentized residuals vs the fitted values. The boxplot is from the studentized residuals.}
 
 \item{normality}{\code{TRUE} it will give an histogram of the residuals, a qq-plot of the residuals and
-a scatterplot between the fitted values and the the actual values of the dependent variable is also included.}
+a scatter plot between the fitted values and the the actual values of the dependent variable is also included.}
 
 \item{outnorm}{\code{TRUE} will give a panel with 6 diagrams for the residuals in \code{outliers} and in \code{normality} together.}
 
-\item{regressors}{\code{TRUE} one or more than one scatter plot regarding each independent variable and the residuals will be produced.}
+\item{regressors}{\code{TRUE} one or more than one scatter plot regarding each independent variable and the residuals will be produced.
+For more than 9 regressors than it will produce one by one plot. If the independent variable is kvalitative, transform first as factor and than it will automatically produce a boxplot.}
 
 \item{lmobject}{a fitted regression model from \code{lm}. With only this argument the function will print out all the plots one by one.}
 }
@@ -37,7 +38,10 @@ as well as one by one diagram describing and analyzing the residuals from a line
 \examples{
 library(regkurs)
 lmfit = lm(nRides ~ temp + hum + windspeed, data = bike)
-res.diagnostics(lmfit) #all the plots one by one
+res.diagnostics(lmfit) #6 plots together
 res.diagnostics(lmfit,block=T)#all the plots in one panel
-res.diagnostics(lmfit,outliers=T)#only the first three plots
+res.diagnostics(lmfit,outliers=T)#only the first three plots regarding residuals, studentized residuals
+res.diagnostics(lmfit,normality=T)#only three plots regarding normality and fitting
+res.diagnostics(lmfit,outnorm = F)#all plots one by one
+res.diagnostics(lmfit,regressors=T)#show only the relationship between the residuals and each regressor included in lm()
 }
