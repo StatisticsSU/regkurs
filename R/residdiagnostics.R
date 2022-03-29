@@ -58,10 +58,6 @@ res.diagnostics<-function(lm_obj,block=F,outliers=F,normality=F,outnorm=T,regres
          ylim = c(0, max(p_hist$density, fun)),
          main = "Histogram with normal curve")
     
-    
-    #    hist(x, prob = TRUE, col = "light blue",
-    #    ylim = c(0, max(fun)),xlab="Residuals",
-    #    main = "Histogram with normal curve")
     lines(x2, fun, col = "blue", lwd = 2)
     
   }  
@@ -75,7 +71,8 @@ res.diagnostics<-function(lm_obj,block=F,outliers=F,normality=F,outnorm=T,regres
     
     
     
-    p2<-plot(fitted, residueStud,col="blue",ylab='Stud.Residuals',xlab='Fitted values',pch=20)
+   p2<-plot(fitted, residueStud,col="blue",ylab='Stud.Residuals',xlab='Fitted values',pch=20,
+                   ylim=c(min(residueStud,-2),max(residueStud,2)))
     abline(0, 0,lty=2,lwd=2,col="red")
     abline(tkrit, 0,lty=2,lwd=2,col="brown")
     abline(0,0,lty=2,lwd=2,col="green")
@@ -126,8 +123,8 @@ res.diagnostics<-function(lm_obj,block=F,outliers=F,normality=F,outnorm=T,regres
     
     
     
-    p2<-plot(fitted, residueStud,col="blue",
-             ylab='Stud.Residuals',xlab='Fitted values',pch=20)
+p2<-plot(fitted, residueStud,col="blue",ylab='Stud.Residuals',xlab='Fitted values',pch=20,
+                   ylim=c(min(residueStud,-2),max(residueStud,2)))
     abline(0, 0,lty=2,lwd=2,col="red")
     abline(tkrit, 0,lty=2,lwd=2,col="brown")
     abline(0,0,lty=2,lwd=2,col="green")
@@ -175,8 +172,8 @@ res.diagnostics<-function(lm_obj,block=F,outliers=F,normality=F,outnorm=T,regres
     
     
     
-    p2<-plot(fitted, residueStud,col="blue",
-             ylab='Stud.Residuals',xlab='Fitted values',pch=20)
+     p2<-plot(fitted, residueStud,col="blue",ylab='Stud.Residuals',xlab='Fitted values',pch=20,
+                   ylim=c(min(residueStud,-2),max(residueStud,2)))
     abline(0, 0,lty=2,lwd=2,col="red")
     abline(tkrit, 0,lty=2,lwd=2,col="brown")
     abline(0,0,lty=2,lwd=2,col="green")
@@ -231,8 +228,8 @@ res.diagnostics<-function(lm_obj,block=F,outliers=F,normality=F,outnorm=T,regres
     
     
     
-    p2<-plot(fitted, residueStud,col="blue",
-             ylab='Stud.Residuals',xlab='Fitted values',pch=20)
+  p2<-plot(fitted, residueStud,col="blue",ylab='Stud.Residuals',xlab='Fitted values',pch=20,
+                   ylim=c(min(residueStud,-2),max(residueStud,2)))
     abline(0, 0,lty=2,lwd=2,col="red")
     abline(tkrit, 0,lty=2,lwd=2,col="brown")
     abline(0,0,lty=2,lwd=2,col="green")
