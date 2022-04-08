@@ -12,7 +12,8 @@ RoxygenNote: 7.1.2
 Imports:
 	glmnet,
     mvtnorm,
-    manipulate
+    manipulate,
+    RColorBrewer
 Depends: 
     R (>= 2.10)
 LazyData: true

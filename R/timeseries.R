@@ -16,8 +16,8 @@ moving_average <- function(y, r, plotfig = TRUE){
     M[t] = mean(y[(t-r):(t+r)])
   }
   if (plotfig){
-    plot(y, type = "l")
-    lines(M, type = "l", col = "red", lwd = 2)
+    plot(y, type = "l", col = prettycol[2])
+    lines(M, type = "l", col = prettycol[4], lwd = 2)
   }
   return(M)
 }
@@ -31,7 +31,7 @@ moving_average <- function(y, r, plotfig = TRUE){
 #' @export
 #' @examples
 #' library(regkurs)
-#' M = moving_average(c(AirPassengers), 2)
+#' M = moving_average_seasonal(c(AirPassengers), season = 12)
 moving_average_seasonal <- function(y, season, plotfig = TRUE){
   w = rep(1/season, season + 1)
   w[1] = w[1]/2
@@ -43,8 +43,8 @@ moving_average_seasonal <- function(y, season, plotfig = TRUE){
     M[t] = sum(w*y[(t-r):(t+r)])
   }
   if (plotfig){
-    plot(y, type = "l")
-    lines(M, type = "l", col = "red", lwd = 2)
+    plot(y, type = "l", col = prettycol[2])
+    lines(M, type = "l", col = prettycol[4], lwd = 2)
   }
   return(M)
 }
@@ -57,8 +57,8 @@ moving_average_seasonal <- function(y, season, plotfig = TRUE){
 #' library(regkurs)
 #' moving_average_manip(c(AirPassengers))
 moving_average_manip <- function(y){
-  manipulate(
+  manipulate::manipulate(
     moving_average(y, r),
-    r = slider(1, 20, step=1, initial = 1)
+    r = manipulate::slider(1, 20, step=1, initial = 1)
   )
 }

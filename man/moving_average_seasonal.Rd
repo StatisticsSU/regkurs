@@ -21,5 +21,5 @@ Moving average to smooth out seasonal time series
 }
 \examples{
 library(regkurs)
-M = moving_average(c(AirPassengers), 2)
+M = moving_average_seasonal(c(AirPassengers), season = 12)
 }
