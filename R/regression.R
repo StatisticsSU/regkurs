@@ -85,7 +85,120 @@ regsummary <- function(lmobject, anova = T,  fit_measures = T, param = T,
 }
 
 
+#' Plot prediction intervals for simple linear regression \cr
+#'
+#' @param lmobject a fitted regression model from `lm`.
+#' @param conf_int_line if TRUE, then conf intervals for regression line are plotted.
+#' @param pred_interval if TRUE, then prediction intervals are plotted.
+#' @param level confidence level, default is level = 0.95
+#' @param ngrid number of grid points over which the intervals are computed
+#' @return data frame with confidence and prediction intervals over xGrid
+#' @export
+#' @examples
+#' library(regkurs)
+#' lmfit = lm(mpg ~ hp, data = mtcars)
+#' res = pred_interval_reg(lmfit)
+pred_interval_reg <- function(lmobject, conf_int_line = T, pred_interval = T,
+                              level = 0.95, ngrid = 100){
+  y = lmobject$model[,1]
+  x = lmobject$model[,2]
+  yname = names(lmobject$model)[1]
+  xname = names(lmobject$model)[2]
+  xmingrid = min(x) - 0.01*(max(x)-min(x))
+  xmaxgrid = max(x) + 0.01*(max(x)-min(x))
+  datagrid = data.frame(seq(xmingrid, xmaxgrid, length = ngrid))
+  names(datagrid) <- xname
+  CI =  predict.lm(lmobject, newdata = datagrid,
+                   interval = "confidence", level = level)
+  PI =  predict.lm(lmobject, newdata = datagrid,
+                   interval = "prediction", level = level)
 
+  plot(x, y, type="n", xlab = xname, ylab = yname, cex = 0.7,
+       ylim = c(min(CI,PI), max(CI,PI)), xlim = c(xmingrid,xmaxgrid),
+       main = "Regression - Confidence and Prediction intervals"
+  )
+  if (pred_interval){
+    polygon(c(datagrid[,1], rev(datagrid[,1])), c(PI[,2], rev(PI[,3])),
+            col = rgb(173/255, 216/255, 230/255, 0.4), border = 0)
+  }
+  if (conf_int_line){
+    lines(datagrid[,1], CI[,2], col = rgb(160/255, 32/255, 240/255), lwd = 2)
+    lines(datagrid[,1], CI[,3], col = rgb(160/255, 32/255, 240/255), lwd = 2)
+  }
+  lines(c(xmingrid, xmaxgrid),
+        c(lmobject$coef[1] + lmobject$coef[2]*xmingrid,
+          lmobject$coef[1] + lmobject$coef[2]*xmaxgrid),
+        col = rgb(0/255, 0/255, 139/255), lwd = 3)
+  points(x, y, pch = 19, cex = 0.7)
+
+  legend(x = "topright", inset=.05,
+         legend = c("Data", "Regression line","C.I.", "P.I."),
+         pch = c(19,NA,NA,NA), pt.lwd = c(1,3,2,2), lty = c(0,1,1,0),
+         fill = c(NA,NA,NA, rgb(173/255, 216/255, 230/255, 0.4)),
+         border = c(0,0,0,0),
+         col = c("black",
+                 rgb(0/255, 0/255, 139/255),
+                 rgb(160/255, 32/255, 240/255),
+                 rgb(173/255, 216/255, 230/255, 0.4)),
+         box.lty=1
+  )
+
+  return(data.frame(xgrid = datagrid[,1],
+                    CI_low = CI[,2], CI_high = CI[,3],
+                    PI_low = PI[,2], PI_high = PI[,3]
+  )
+  )
+}
+
+#' Simulate from a linear regression model
+#'
+#' Simulates a dataset with `n` observation from the linear regression model
+#' \deqn{y = \beta_0 + \beta_1 x_1 + \ldots + \beta_k x_k + \epsilon, \epsilon \sim N(0, \sigma_\epsilon^2)}{y = \beta_0 + \beta_1 * x_1 + ... + \beta_k * x_k + \epsilon, \epsilon ~ N(0, \sigma_ \epsilon^2)}
+#' with covariates (x) simulated from a normal distribution with the same correlation `rho_x` \cr
+#' between all pairs of covariates. Covariate \eqn{x_j}{x_j} has standard deviation `sigma_x[j]`. \cr
+#' Alternatively the covariate can follow a uniform distribution.
+#' @param n the number of observations in the simulated dataset.
+#' @param betavect a vector with regression coefficients
+#' c(beta_0,beta_1,...beta_k). First element is intercept if `intercept = TRUE`
+#' @param sigma_eps standard deviation of the error terms, epsilon.
+#' @param intercept if `TRUE` an intercept is added to the model.
+#' @param covdist distribution of the covariates. Options: `'normal'` or `'uniform'`.
+#' @param rho_x correlation among the covariates. Same for all covariate pairs.
+#' @param sigma_x vector with standard deviation of the covariates.
+#' @return dataframe with simulated data (y, X1, X2, ..., XK) (no intercept included).
+#' @export
+#' @examples
+#' library(regkurs)
+#' simdata <- regsimulate(n = 500, betavect = c(1, -2, 1, 0), sigma_eps = 2)
+#' lmfit <- lm(y ~ X1 + X2 + X3, data = simdata)
+#' regsummary(lmfit, anova = F)
+regsimulate <- function(n, betavect, sigma_eps, intercept = TRUE, covdist = 'normal',
+                        rho_x = 0, sigma_x = rep(1,length(betavect)-intercept)){
+
+  k = length(betavect) - intercept
+
+  # Generate covariates
+  if (covdist == 'normal'){
+    rho = matrix(rho_x, k, k)
+    diag(rho) <- 1
+    sigma = diag(sigma_x)%*%rho%*%diag(sigma_x)
+    X = mvtnorm::rmvnorm(n, sigma = sigma)
+  }else{
+    X = matrix(runif(n*k), n, k)
+    if (rho_x != 0) warning("uniformly distributed covariates are always uncorrelated")
+  }
+  if (intercept) X = cbind(1,X)
+
+  # Simulate responses
+  y = X%*%betavect + rnorm(n, sd = sigma_eps)
+
+  if (intercept) X = X[,-1] # remove intercept in the returned dataset
+  data = data.frame(cbind(y,X))
+  xnames = rep(NA,k)
+  for (j in 1:k) xnames[j] = paste("X",j, sep = "")
+  names(data) <- c("y", xnames)
+  return(data)
+}
 
 
 #' Summarize the results from a logistic regression analysis
@@ -172,55 +285,6 @@ logisticregsummary <- function(glmobject, odds_ratio = T, param = T, conf_interv
 
 
 
-#' Simulate from a linear regression model
-#'
-#' Simulates a dataset with `n` observation from the linear regression model
-#' \deqn{y = \beta_0 + \beta_1 x_1 + \ldots + \beta_k x_k + \epsilon, \epsilon \sim N(0, \sigma_\epsilon^2)}{y = \beta_0 + \beta_1 * x_1 + ... + \beta_k * x_k + \epsilon, \epsilon ~ N(0, \sigma_ \epsilon^2)}
-#' with covariates (x) simulated from a normal distribution with the same correlation `rho_x` \cr
-#' between all pairs of covariates. Covariate \eqn{x_j}{x_j} has standard deviation `sigma_x[j]`. \cr
-#' Alternatively the covariate can follow a uniform distribution.
-#' @param n the number of observations in the simulated dataset.
-#' @param betavect a vector with regression coefficients
-#' c(beta_0,beta_1,...beta_k). First element is intercept if `intercept = TRUE`
-#' @param sigma_eps standard deviation of the error terms, epsilon.
-#' @param intercept if `TRUE` an intercept is added to the model.
-#' @param covdist distribution of the covariates. Options: `'normal'` or `'uniform'`.
-#' @param rho_x correlation among the covariates. Same for all covariate pairs.
-#' @param sigma_x vector with standard deviation of the covariates.
-#' @return dataframe with simulated data (y, X1, X2, ..., XK) (no intercept included).
-#' @export
-#' @examples
-#' library(regkurs)
-#' simdata <- regsimulate(n = 500, betavect = c(1, -2, 1, 0), sigma_eps = 2)
-#' lmfit <- lm(y ~ X1 + X2 + X3, data = simdata)
-#' regsummary(lmfit, anova = F)
-regsimulate <- function(n, betavect, sigma_eps, intercept = TRUE, covdist = 'normal',
-                   rho_x = 0, sigma_x = rep(1,length(betavect)-intercept)){
-
-  k = length(betavect) - intercept
-
-  # Generate covariates
-  if (covdist == 'normal'){
-    rho = matrix(rho_x, k, k)
-    diag(rho) <- 1
-    sigma = diag(sigma_x)%*%rho%*%diag(sigma_x)
-    X = mvtnorm::rmvnorm(n, sigma = sigma)
-  }else{
-    X = matrix(runif(n*k), n, k)
-    if (rho_x != 0) warning("uniformly distributed covariates are always uncorrelated")
-  }
-  if (intercept) X = cbind(1,X)
-
-  # Simulate responses
-  y = X%*%betavect + rnorm(n, sd = sigma_eps)
-
-  if (intercept) X = X[,-1] # remove intercept in the returned dataset
-  data = data.frame(cbind(y,X))
-  xnames = rep(NA,k)
-  for (j in 1:k) xnames[j] = paste("X",j, sep = "")
-  names(data) <- c("y", xnames)
-  return(data)
-}
 
 
 
