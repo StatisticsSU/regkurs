@@ -7,8 +7,8 @@
 #' @return a vector of the same length as y with moving averages (NA at boundaries)
 #' @export
 #' @examples
-#' library(regkurs)
-#' M = moving_average(c(AirPassengers), 2)
+#' library(SUdatasets)
+#' M = moving_average(globaltemp$temp, 2)
 moving_average <- function(y, r, plotfig = TRUE){
   n = length(y)
   M = rep(NA,n)
@@ -18,6 +18,10 @@ moving_average <- function(y, r, plotfig = TRUE){
   if (plotfig){
     plot(y, type = "l", col = prettycol[2])
     lines(M, type = "l", col = prettycol[4], lwd = 2)
+    legend(x = "topleft", inset=.05,
+           legend = c("Data", paste(2*r+1,"-point moving average", sep = "")),
+           pt.lwd = c(1,2), lty = c(1,1), col = c(prettycol[2],prettycol[4])
+    )
   }
   return(M)
 }
@@ -30,7 +34,6 @@ moving_average <- function(y, r, plotfig = TRUE){
 #' @return a vector of the same length as y with moving averages (NA at boundaries)
 #' @export
 #' @examples
-#' library(regkurs)
 #' M = moving_average_seasonal(c(AirPassengers), season = 12)
 moving_average_seasonal <- function(y, season, plotfig = TRUE){
   w = rep(1/season, season + 1)
@@ -45,6 +48,10 @@ moving_average_seasonal <- function(y, season, plotfig = TRUE){
   if (plotfig){
     plot(y, type = "l", col = prettycol[2])
     lines(M, type = "l", col = prettycol[4], lwd = 2)
+    legend(x = "topleft", inset=.05,
+           legend = c("Data", "Seasonal moving average"),
+           pt.lwd = c(1,2), lty = c(1,1), col = c(prettycol[2],prettycol[4])
+    )
   }
   return(M)
 }
@@ -54,11 +61,11 @@ moving_average_seasonal <- function(y, season, plotfig = TRUE){
 #' @param y a vector with time series data
 #' @export
 #' @examples
-#' library(regkurs)
-#' moving_average_manip(c(AirPassengers))
+#' library(SUdatasets)
+#' moving_average_manip(globaltemp$temp)
 moving_average_manip <- function(y){
   manipulate::manipulate(
-    moving_average(y, r),
+    invisible(moving_average(y, r)),
     r = manipulate::slider(1, 20, step=1, initial = 1)
   )
 }

@@ -20,6 +20,5 @@ a vector of the same length as y with moving averages (NA at boundaries)
 Moving average to smooth out seasonal time series
 }
 \examples{
-library(regkurs)
 M = moving_average_seasonal(c(AirPassengers), season = 12)
 }

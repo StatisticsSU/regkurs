@@ -21,6 +21,6 @@ a vector of the same length as y with moving averages (NA at boundaries)
 Centered moving average to smooth out a time series
 }
 \examples{
-library(regkurs)
-M = moving_average(c(AirPassengers), 2)
+library(SUdatasets)
+M = moving_average(globaltemp$temp, 2)
 }

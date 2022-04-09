@@ -13,7 +13,9 @@ Imports:
 	glmnet,
     mvtnorm,
     manipulate,
-    RColorBrewer
+    RColorBrewer,
+    SUdatasets
+Remotes: StatisticsSU/SUdatasets
 Depends: 
     R (>= 2.10)
 LazyData: true

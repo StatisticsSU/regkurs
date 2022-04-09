@@ -13,6 +13,6 @@ moving_average_manip(y)
 Manipulate version of centered moving average to smooth out a time series
 }
 \examples{
-library(regkurs)
-moving_average_manip(c(AirPassengers))
+library(SUdatasets)
+moving_average_manip(globaltemp$temp)
 }
