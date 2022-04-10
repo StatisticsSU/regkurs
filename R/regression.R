@@ -209,14 +209,13 @@ regsimulate <- function(n, betavect, sigma_eps, intercept = TRUE, covdist = 'nor
 #' @param odds_ratio `TRUE` if odds ratios for parameters is computed.
 #' @param param `TRUE` if parameter estimates, standard errors etc is computed.
 #' @param conf_intervals `TRUE` if confidence intervals for parameters.
-#' @param vif_factors `TRUE` if variance inflation factors are to be printed.
 #' @return list with two tables: param, odds_ratio
 #' @export
 #' @examples
 #' library(regkurs)
 #' glmfit <- glm(survived ~ age + sex + firstclass, data = titanic, family = binomial)
 #' logisticregsummary(glmfit)
-logisticregsummary <- function(glmobject, odds_ratio = T, param = T, conf_intervals = F, vif_factors = F){
+logisticregsummary <- function(glmobject, odds_ratio = T, param = T, conf_intervals = F){
 
   if ("(Intercept)" %in% names(glmobject$coefficients)) intercept = 1 else intercept = 0
 
@@ -235,17 +234,6 @@ logisticregsummary <- function(glmobject, odds_ratio = T, param = T, conf_interv
       param_table = glmsummary$coefficients
     }
 
-    # Variance inflation factors
-    if (vif_factors & k>1){
-      vif = rep(NA,k)
-      for (j in 1:k){
-        vif[j] = 1/(1-summary(lm(X[,j] ~ data.matrix(X[,-j])))$r.squared)
-      }
-      if (intercept) vif = c(NA,vif)
-      param_table = cbind(param_table,vif)
-      colnames(param_table)[ncol(param_table)] = "VIF"
-    }
-
     {cat("\nParameter estimates\n------------------------------------------------\n");
       print(param_table, digits = 5, na.print = "")}
 
@@ -261,17 +249,6 @@ logisticregsummary <- function(glmobject, odds_ratio = T, param = T, conf_interv
     }else
     {
       odds_ratio_table = cbind(exp(glmsummary$coef[,1:2]),glmsummary$coef[,3:4])
-    }
-
-    # Variance inflation factors
-    if (vif_factors & k>1){
-      vif = rep(NA,k)
-      for (j in 1:k){
-        vif[j] = 1/(1-summary(lm(X[,j] ~ data.matrix(X[,-j])))$r.squared)
-      }
-      if (intercept) vif = c(NA,vif)
-      odds_ratio_table = cbind(odds_ratio_table,vif)
-      colnames(odds_ratio_table)[ncol(odds_ratio_table)] = "VIF"
     }
 
     {cat("\nOdds ratio estimates\n------------------------------------------------\n");
