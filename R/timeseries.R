@@ -69,3 +69,42 @@ moving_average_manip <- function(y){
     r = manipulate::slider(1, 20, step=1, initial = 1)
   )
 }
+
+
+#' Summarize the estimates from an ARIMA(p,d,q) fit
+#'
+#' Alternative to the usual `summary` function for `arima` fit.
+#' @param arimafit an ARIMA fit from `arima`.
+#' @return data frame with estimates, std err, z-ratio etc
+#' @export
+#' @examples
+#' library(SUdatasets)
+#' arimafit = arima(swedinfl$KPIF, order = c(2,0,2))
+#' arimasumm = arima_coef_summary(arimafit)
+arima_coef_summary <- function(arimafit){
+
+  if ("(intercept)" %in% names(arimafit$coef)) intercept = 1 else intercept = 0
+
+  arimasummary = summary(arimafit)
+  nparam = length(arimafit$coef) + 1
+  nobs = arimafit$nobs
+
+  estimates = arimafit$coef
+  stderror = sqrt(diag(arimafit$var.coef))
+  zratio = arimafit$coef/sqrt(diag(arimafit$var.coef))
+  ci95low = estimates - 1.96*stderror
+  ci95high = estimates + 1.96*stderror
+
+  nparam = length(arimafit$coef) + 1
+  nobs = arimafit$nobs
+  param_table = data.frame(Estimate = estimates, Std.Error = stderror,
+        z.value =  zratio, p.value = 2*(1 - pnorm(abs(zratio))),
+        ci95low = ci95low, ci95high = ci95high)
+  names(param_table) <- c("Estimate", "Std. Error", "z-ratio", "Pr(>|z|)",
+                          "2.5 %", "97.5 %")
+  rownames(param_table)[nparam-1] <- "mean"
+  {cat("\nParameter estimates\n--------------------------------------------------------------\n");
+    print(param_table, digits = 5, na.print = "")}
+
+  invisible(param_table)
+}
