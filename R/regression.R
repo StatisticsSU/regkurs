@@ -57,7 +57,7 @@ regsummary <- function(lmobject, anova = T,  fit_measures = T, param = T,
   if (param){
     # Confidence intervals on parameters
     if (conf_intervals){
-      param_table = cbind(lmsummary$coefficients, confint.default(lmobject))
+      param_table = cbind(lmsummary$coefficients, confint(lmobject))
     }else
     {
       param_table = lmsummary$coefficients
@@ -143,7 +143,7 @@ pred_interval_reg <- function(lmobject, conf_int_line = T, pred_interval = T,
          box.lty=1
   )
 
-<<<<<<< HEAD
+
   # Table with estimated coefficients etc
   if (param){
     # Confidence intervals on parameters
@@ -200,13 +200,13 @@ pred_interval_reg <- function(lmobject, conf_int_line = T, pred_interval = T,
 
 
   invisible(list(param = param_table, odds_ratio = odds_ratio_table))
-=======
+
   return(data.frame(xgrid = datagrid[,1],
                     CI_low = CI[,2], CI_high = CI[,3],
                     PI_low = PI[,2], PI_high = PI[,3]
   )
   )
->>>>>>> 466052ec4b13c2939654f28949d6cbd8e49f46fc
+
 }
 
 #' Simulate from a linear regression model
@@ -287,7 +287,7 @@ logisticregsummary <- function(glmobject, odds_ratio = T, param = T, conf_interv
   if (param){
     # Confidence intervals on parameters
     if (conf_intervals){
-      param_table = cbind(glmsummary$coefficients, suppressMessages(confint(glmobject)))
+      param_table = cbind(glmsummary$coefficients, suppressMessages(confint.default(glmobject)))
     }else
     {
       param_table = glmsummary$coefficients
