@@ -148,7 +148,7 @@ pred_interval_reg <- function(lmobject, conf_int_line = T, pred_interval = T,
   if (param){
     # Confidence intervals on parameters
     if (conf_intervals){
-      param_table = cbind(glmsummary$coefficients, suppressMessages(confint.default(glmobject)))
+      param_table = cbind(glmsummary$coefficients, suppressMessages(confint(glmobject)))
     }else
     {
       param_table = glmsummary$coefficients
