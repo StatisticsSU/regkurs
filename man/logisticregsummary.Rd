@@ -4,13 +4,7 @@
 \alias{logisticregsummary}
 \title{Summarize the results from a logistic regression analysis}
 \usage{
-logisticregsummary(
-  glmobject,
-  odds_ratio = T,
-  param = T,
-  conf_intervals = F,
-  vif_factors = F
-)
+logisticregsummary(glmobject, odds_ratio = T, param = T, conf_intervals = F)
 }
 \arguments{
 \item{glmobject}{a fitted regression model from \code{glm}.}
@@ -20,8 +14,6 @@ logisticregsummary(
 \item{param}{\code{TRUE} if parameter estimates, standard errors etc is computed.}
 
 \item{conf_intervals}{\code{TRUE} if confidence intervals for parameters.}
-
-\item{vif_factors}{\code{TRUE} if variance inflation factors are to be printed.}
 }
 \value{
 list with two tables: param, odds_ratio

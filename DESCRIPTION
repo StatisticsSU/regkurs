@@ -11,7 +11,11 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
 Imports:
 	glmnet,
-    mvtnorm
+    mvtnorm,
+    manipulate,
+    RColorBrewer,
+    SUdatasets
+Remotes: StatisticsSU/SUdatasets
 Depends: 
     R (>= 2.10)
 LazyData: true
