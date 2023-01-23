@@ -259,6 +259,44 @@ regsimulate <- function(n, betavect, sigma_eps, intercept = TRUE, covdist = 'nor
   return(data)
 }
 
+#' K-fold cross-validation of regression models estimated with lm()
+#'
+#' @param formula an object of class "formula": a symbolic description of the model to be fitted.
+#' @param data a data frame with the data used for fitting the models.
+#' @param nfolds the number of folds in the cross-validation.
+#' @param obs_order order of the observations when splitting the data. obs_order = "random" gives a random order.
+#' @return RMSE Root mean squared prediction error on test data
+#' @export
+#' @examples
+#' library(regkurs)
+#' RMSE_CV = reg_crossval(mpg ~ hp, data = mtcars, nfolds = 4, obs_order = 1:32)
+#' print(RMSE_CV)
+reg_crossval <- function(formula, data, nfolds, obs_order = "random"){
+
+  n = dim(data)[1]
+  if (is.character(obs_order)) obs_order = sample(1:n)
+
+  obs_per_fold = ceiling(n/nfolds)
+  yhat = matrix(NA, obs_per_fold, nfolds)
+  if (n %% nfolds == 0){
+    test_obs_matrix = matrix(obs_order, obs_per_fold) # k:th column contains test for fold k
+  }else{
+    nobs_last_fold = n-obs_per_fold*(nfolds-1)
+    test_obs_matrix = matrix(NA, obs_per_fold, nfolds)
+    test_obs_matrix[,1:(nfolds-1)] = matrix(obs_order[obs_per_fold*(nfolds-1)], obs_per_fold)
+    test_obs_matrix[1:nobs_last_fold, nfolds] = obs_order[(obs_per_fold*(nfolds-1)+1):n]
+  }
+  for (k in 1:nfolds){
+    testfold = test_obs_matrix[,k][!is.na(test_obs_matrix[,k])]
+    trainingfold = setdiff(obs_order,testfold)
+    fit = lm(formula, data = data[trainingfold,])
+    yhat[1:length(testfold),k] = predict(fit, newdata = data[testfold,])
+  }
+  yhat = c(yhat)[!is.na(c(yhat))]
+  yordered = data[all.names(formula)[2]][obs_order,]
+  RMSE = sqrt(sum((yordered - yhat)^2)/n)
+}
+
 
 #' Summarize the results from a logistic regression analysis
 #'
